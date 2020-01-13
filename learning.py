@@ -1,10 +1,10 @@
 import sys
 from matplotlib import pyplot
-from keras.applications.vgg16 import VGG16
+from keras.applications.mobilenet_v2 import MobileNetV2
 from keras.models import Model
 from keras.layers import Dense
 from keras.layers import Flatten
-from keras.optimizers import SGD
+from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 
 folder_name = 'playing-card-ml'
@@ -12,18 +12,16 @@ folder_name = 'playing-card-ml'
 # define cnn model
 def define_model():
     # load model
-    model = VGG16(include_top=False, input_shape=(224, 224, 3))
-    # mark loaded layers as not trainable
-    for layer in model.layers:
-        layer.trainable = False
+    model = MobileNetV2(include_top=False, input_shape=(224, 224, 3), alpha=0.35)
+
     # add new classifier layers
     flat1 = Flatten()(model.layers[-1].output)
     class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
-    output = Dense(6, activation='sigmoid')(class1)
+    output = Dense(6, activation='softmax')(class1)
     # define new model
     model = Model(inputs=model.inputs, outputs=output)
     # compile model
-    opt = SGD(lr=0.001, momentum=0.9)
+    opt = Adam(lr=3e-4)
     model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
@@ -51,7 +49,7 @@ def run_test_harness():
     # define model
     model = define_model()
     # create data generator
-    datagen = ImageDataGenerator(featurewise_center=True)
+    datagen = ImageDataGenerator(featurewise_center=True, horizontal_flip=True)
     # specify imagenet mean values for centering
     datagen.mean = [123.68, 116.779, 103.939]
     # prepare iterator

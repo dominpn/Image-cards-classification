@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/playing-card/
+/playing-card-ml/
+/.idea
