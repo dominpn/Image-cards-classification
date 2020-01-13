@@ -24,7 +24,7 @@ def define_model():
     model = Model(inputs=model.inputs, outputs=output)
     # compile model
     opt = SGD(lr=0.001, momentum=0.9)
-    model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
 
