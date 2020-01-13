@@ -1,6 +1,5 @@
 import sys
 from matplotlib import pyplot
-from keras.utils import to_categorical
 from keras.applications.vgg16 import VGG16
 from keras.models import Model
 from keras.layers import Dense
@@ -20,7 +19,7 @@ def define_model():
     # add new classifier layers
     flat1 = Flatten()(model.layers[-1].output)
     class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
-    output = Dense(1, activation='sigmoid')(class1)
+    output = Dense(6, activation='sigmoid')(class1)
     # define new model
     model = Model(inputs=model.inputs, outputs=output)
     # compile model
@@ -57,9 +56,9 @@ def run_test_harness():
     datagen.mean = [123.68, 116.779, 103.939]
     # prepare iterator
     train_it = datagen.flow_from_directory(f'{folder_name}/train/',
-                                           class_mode='binary', batch_size=64, target_size=(224, 224))
+                                           class_mode='categorical', batch_size=64, target_size=(224, 224))
     test_it = datagen.flow_from_directory(f'{folder_name}/test/',
-                                          class_mode='binary', batch_size=64, target_size=(224, 224))
+                                          class_mode='categorical', batch_size=64, target_size=(224, 224))
     # fit model
     history = model.fit_generator(train_it, steps_per_epoch=len(train_it),
                                   validation_data=test_it, validation_steps=len(test_it), epochs=10, verbose=1)
