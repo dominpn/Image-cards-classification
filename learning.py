@@ -49,7 +49,7 @@ def run_test_harness():
     # define model
     model = define_model()
     # create data generator
-    datagen = ImageDataGenerator(featurewise_center=True, horizontal_flip=True)
+    datagen = ImageDataGenerator(featurewise_center=True, horizontal_flip=True, rescale=True, shear_range=0.2, zoom_range=0.2)
     # specify imagenet mean values for centering
     datagen.mean = [123.68, 116.779, 103.939]
     # prepare iterator
@@ -59,7 +59,7 @@ def run_test_harness():
                                           class_mode='categorical', batch_size=64, target_size=(224, 224))
     # fit model
     history = model.fit_generator(train_it, steps_per_epoch=len(train_it),
-                                  validation_data=test_it, validation_steps=len(test_it), epochs=10, verbose=1)
+                                  validation_data=test_it, validation_steps=len(test_it), epochs=20, verbose=1)
     # evaluate model
     _, acc = model.evaluate_generator(test_it, steps=len(test_it), verbose=0)
     print('> %.3f' % (acc * 100.0))
