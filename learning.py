@@ -6,6 +6,7 @@ from keras.layers import Dense
 from keras.layers import Flatten
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
+from keras.callbacks.callbacks import ModelCheckpoint
 
 folder_name = 'playing-card-ml'
 
@@ -58,8 +59,9 @@ def run_test_harness():
     test_it = datagen.flow_from_directory(f'{folder_name}/test/',
                                           class_mode='categorical', batch_size=64, target_size=(224, 224))
     # fit model
+    callback = ModelCheckpoint('cards_model.hdf5', monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
     history = model.fit_generator(train_it, steps_per_epoch=len(train_it),
-                                  validation_data=test_it, validation_steps=len(test_it), epochs=20, verbose=1)
+                                  validation_data=test_it, validation_steps=len(test_it), epochs=3, verbose=1, callbacks=[callback])
     # evaluate model
     _, acc = model.evaluate_generator(test_it, steps=len(test_it), verbose=0)
     print('> %.3f' % (acc * 100.0))
