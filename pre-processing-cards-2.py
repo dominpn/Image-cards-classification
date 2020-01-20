@@ -15,5 +15,5 @@ for figure in figures:
         dst_dir = 'train/'
         if random() < val_ratio:
             dst_dir = 'test/'
-        dst = dataset_home + dst_dir + figure + '/' + file
+        dst = dataset_home + '/' + dst_dir + figure + '/' + file
         copyfile(src, dst)
