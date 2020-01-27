@@ -16,7 +16,9 @@ while(True):
 
     dim = (224, 224)
     resized = cv2.resize(frame, dim, interpolation=cv2.INTER_AREA)
-    model.predict(resized)
+    image = np.expand_dims(resized, axis=0)
+    result = model.predict(image)
+    print(result)
 
     # Display the resulting frame
     cv2.imshow('frame',resized)
